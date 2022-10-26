@@ -46,7 +46,7 @@ function ignoreError(errorInput, file, filePath) {
     uniqueIds.sort((a, b) => a.localeCompare(b));
 
     const replacement = uniqueIds.length ? `{{! template-lint-disable ${uniqueIds.join(' ')} }}\n` : '';
-    writeFileSync(error.filePath, file.replace(/^.*\n/, replacement));
+    writeFileSync(filePath, file.replace(/^.*\n/, replacement));
   } else if (uniqueIds.length) {
     uniqueIds.sort((a, b) => a.localeCompare(b));
     writeFileSync(filePath, `{{! template-lint-disable ${uniqueIds.join(' ')} }}\n${file}`);
