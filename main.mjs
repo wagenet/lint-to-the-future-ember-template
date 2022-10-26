@@ -12,11 +12,6 @@ function ignoreError(errorInput, file, filePath) {
 
   let uniqueIds = [...new Set(ruleIds)];
 
-  if (!uniqueIds.length) {
-    // no errors to ignore
-    return;
-  }
-
   const firstLine = file.split('\n')[0];
 
   if (firstLine.includes('template-lint-disable')) {
@@ -28,8 +23,9 @@ function ignoreError(errorInput, file, filePath) {
     uniqueIds = [...new Set([...ruleIds, ...existing])];
     uniqueIds.sort((a, b) => a.localeCompare(b));
 
-    writeFileSync(filePath, file.replace(/^.*\n/, `{{! template-lint-disable ${uniqueIds.join(' ')} }}\n`));
-  } else {
+    const replacement = uniqueIds.length ? `{{! template-lint-disable ${uniqueIds.join(' ')} }}\n` : '';
+    writeFileSync(error.filePath, file.replace(/^.*\n/, replacement));
+  } else if (uniqueIds.length) {
     uniqueIds.sort((a, b) => a.localeCompare(b));
     writeFileSync(filePath, `{{! template-lint-disable ${uniqueIds.join(' ')} }}\n${file}`);
   }
